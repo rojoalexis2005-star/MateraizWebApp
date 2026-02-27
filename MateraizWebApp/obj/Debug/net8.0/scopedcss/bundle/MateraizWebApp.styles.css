@@ -1,0 +1,49 @@
+/* _content/MateraizWebApp/Views/Shared/_Layout.cshtml.rz.scp.css */
+/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand[b-n03y41zdoz] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a[b-n03y41zdoz] {
+  color: #0077cc;
+}
+
+.btn-primary[b-n03y41zdoz] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-n03y41zdoz], .nav-pills .show > .nav-link[b-n03y41zdoz] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top[b-n03y41zdoz] {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom[b-n03y41zdoz] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-n03y41zdoz] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-n03y41zdoz] {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer[b-n03y41zdoz] {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}

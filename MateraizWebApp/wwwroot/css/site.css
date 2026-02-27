@@ -1,0 +1,113 @@
+/* ============================= */
+/* ?? COLORES GENERALES */
+/* ============================= */
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* ============================= */
+/* ?? NAVBAR */
+/* ============================= */
+
+.navbar {
+    background-color: #556B2F !important; /* Verde olivo */
+}
+
+.navbar-brand img {
+    border: 2px solid white;
+}
+
+
+/* ============================= */
+/* ?? HERO PRINCIPAL (Inicio) */
+/* ============================= */
+
+.hero-section {
+    height: 90vh;
+    background: linear-gradient(rgba(85,107,47,0.85), rgba(85,107,47,0.85)), url('/images/imagen1.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+
+/* ============================= */
+/* ?? HEADER DE PÁGINAS INTERNAS */
+/* ============================= */
+
+.page-header {
+    height: 40vh;
+    background: linear-gradient(rgba(85,107,47,0.85), rgba(85,107,47,0.85)), url('/images/imagen1.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+
+/* ============================= */
+/* ?? BOTONES PERSONALIZADOS */
+/* ============================= */
+
+.btn-materaiz {
+    background-color: #8B4513; /* Marrón */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    transition: 0.3s ease;
+}
+
+    .btn-materaiz:hover {
+        background-color: #6b3210;
+        transform: scale(1.05);
+    }
+
+
+/* ============================= */
+/* ?? TÍTULOS */
+/* ============================= */
+
+section h2,
+section h3 {
+    color: #556B2F;
+    font-weight: bold;
+}
+
+
+/* ============================= */
+/* ?? TARJETAS */
+/* ============================= */
+
+.card {
+    border: none;
+    border-radius: 15px;
+    transition: 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+
+/* ============================= */
+/* ?? FOOTER */
+/* ============================= */
+
+.footer-materaiz {
+    background-color: #8B4513;
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+    .footer-materaiz a {
+        color: white;
+        text-decoration: underline;
+    }
+
+        .footer-materaiz a:hover {
+            opacity: 0.8;
+        }

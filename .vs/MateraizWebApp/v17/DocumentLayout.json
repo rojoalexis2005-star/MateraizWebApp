@@ -1,0 +1,85 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|c:\\users\\rsa40\\source\\repos\\materaizwebapp\\materaizwebapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|solutionrelative:materaizwebapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|c:\\users\\rsa40\\source\\repos\\materaizwebapp\\materaizwebapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|solutionrelative:materaizwebapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|c:\\users\\rsa40\\source\\repos\\materaizwebapp\\materaizwebapp\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|solutionrelative:materaizwebapp\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|c:\\users\\rsa40\\source\\repos\\materaizwebapp\\materaizwebapp\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15680745-A939-4D2D-877F-670DA383E16A}|MateraizWebApp\\MateraizWebApp.csproj|solutionrelative:materaizwebapp\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Models\\Producto.cs",
+              "RelativeDocumentMoniker": "MateraizWebApp\\Models\\Producto.cs",
+              "ToolTip": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Models\\Producto.cs",
+              "RelativeToolTip": "MateraizWebApp\\Models\\Producto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAiwBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T19:41:35.774Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "MateraizWebApp\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "MateraizWebApp\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T19:41:02.587Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\appsettings.json",
+              "RelativeDocumentMoniker": "MateraizWebApp\\appsettings.json",
+              "ToolTip": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\appsettings.json",
+              "RelativeToolTip": "MateraizWebApp\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-27T19:39:29.914Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Program.cs",
+              "RelativeDocumentMoniker": "MateraizWebApp\\Program.cs",
+              "ToolTip": "C:\\Users\\rsa40\\source\\repos\\MateraizWebApp\\MateraizWebApp\\Program.cs",
+              "RelativeToolTip": "MateraizWebApp\\Program.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAYwA4AAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T19:38:48.451Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

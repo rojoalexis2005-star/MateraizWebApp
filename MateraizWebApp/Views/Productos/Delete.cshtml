@@ -1,0 +1,31 @@
+﻿@model MateraizWebApp.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar";
+}
+
+<div class="container my-5">
+    <div class="card shadow p-4 text-center">
+
+        <h3 class="text-danger">⚠ ¿Eliminar este producto?</h3>
+
+        <img src="@Model.ImagenArchivo"
+             style="height:200px; object-fit:cover;"
+             class="mb-3 rounded" />
+
+        <h4>@Model.Nombre</h4>
+        <p>$@Model.Precio</p>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn btn-danger px-4">
+                Sí, eliminar
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary px-4">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>
