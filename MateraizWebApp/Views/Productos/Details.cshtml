@@ -1,0 +1,25 @@
+﻿@model MateraizWebApp.Models.Producto
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<div class="container my-5">
+    <div class="card shadow p-4 text-center">
+
+        <img src="@Model.ImagenUrl"
+             style="width:100%; max-height:400px; object-fit:cover;"
+             class="rounded shadow" />
+
+
+        <h3 class="fw-bold">@Model.Nombre</h3>
+        <p>@Model.Descripcion</p>
+        <h4 class="text-success">$@Model.Precio</h4>
+        <p><strong>Tamaño:</strong> @Model.Tamaño</p>
+
+        <div class="mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+            <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>

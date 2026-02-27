@@ -1,0 +1,84 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Crear Cuenta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height:80vh;">
+    <div class="card shadow-lg p-4" style="width:450px; border-radius:20px;">
+
+        <div class="text-center mb-4">
+            <img src="~/images/logo.png" width="80" class="rounded-circle mb-2" />
+            <h3 style="color:#556B2F;"><strong>Crear Cuenta</strong></h3>
+            <p class="text-muted">Únete a Materaíz 🌿</p>
+        </div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Nombre" class="form-label"></label>
+                <input asp-for="Input.Nombre" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" />
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label asp-for="Input.Password" class="form-label"></label>
+
+                <input asp-for="Input.Password"
+                       class="form-control"
+                       id="registerPassword" />
+
+                <span onclick="toggleRegisterPassword()"
+                      style="position:absolute; right:15px; top:38px; cursor:pointer;">
+                    👁
+                </span>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+
+                <input asp-for="Input.ConfirmPassword"
+                       class="form-control"
+                       id="confirmPassword" />
+
+                <span onclick="toggleConfirmPassword()"
+                      style="position:absolute; right:15px; top:38px; cursor:pointer;">
+                    👁
+                </span>
+                @section Scripts {
+                    <script>
+                        function toggleRegisterPassword() {
+                            var input = document.getElementById("registerPassword");
+                            input.type = input.type === "password" ? "text" : "password";
+                        }
+
+                        function toggleConfirmPassword() {
+                            var input = document.getElementById("confirmPassword");
+                            input.type = input.type === "password" ? "text" : "password";
+                        }
+                    </script>
+                }
+            </div>
+
+            <button type="submit" class="btn w-100 text-white"
+                    style="background-color:#556B2F;">
+                Registrarme
+            </button>
+
+            <hr />
+
+            <div class="text-center">
+                <span>¿Ya tienes cuenta?</span><br />
+                <a asp-page="./Login" class="btn btn-outline-success mt-2">
+                    Iniciar Sesión
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

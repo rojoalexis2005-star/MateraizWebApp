@@ -1,0 +1,46 @@
+## ===============================
+## ASP.NET Core / .NET 8
+## ===============================
+
+# Build results
+bin/
+obj/
+out/
+publish/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database files
+*.mdf
+*.ldf
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Azure
+PublishProfiles/
+
+# Node (si usas frontend)
+node_modules/
+
+# Docker
+docker-compose.override.yml

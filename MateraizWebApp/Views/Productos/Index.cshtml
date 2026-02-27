@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MateraizWebApp.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4 fw-bold">🌿 Nuestros Productos</h2>
+
+    <div class="text-end mb-3">
+        <a asp-action="Create" class="btn btn-success">
+            + Agregar Producto
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100 border-0">
+                    <img src="@item.ImagenUrl" class="img-fluid rounded" />
+
+
+
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold">@item.Nombre</h5>
+                        <p class="text-muted">@item.Descripcion</p>
+                        <p class="fw-bold text-success fs-5">
+                            $@item.Precio
+                        </p>
+                        <p><strong>Tamaño:</strong> @item.Tamaño</p>
+                    </div>
+
+                    <div class="card-footer bg-white text-center border-0">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>

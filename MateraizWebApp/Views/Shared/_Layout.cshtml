@@ -1,0 +1,206 @@
+﻿@using MateraizWebApp.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Materaíz</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body style="background-color:#f8f9fa;">
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark shadow"
+             style="background: linear-gradient(90deg,#556B2F,#6B8E23);">
+            <div class="container">
+
+                <!-- LOGO -->
+                <a class="navbar-brand d-flex align-items-center"
+                   asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png"
+                         width="50"
+                         class="me-2 rounded-circle shadow" />
+                    <strong>Materaíz</strong>
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarMateraiz">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarMateraiz">
+                    <ul class="navbar-nav ms-auto align-items-center">
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="SobreProducto">Sobre el Producto</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Beneficios">Beneficios</a>
+                        </li>
+
+                       
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Galeria">Galería</a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-warning fw-bold"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown">
+                                    Panel Administrador
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="Admin"
+                                           asp-action="Index">
+                                            Administrar Usuarios
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Productos" asp-action="Index">Productos</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="Productos"
+                                           asp-action="Create">
+                                            Crear Producto
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="Productos"
+                                           asp-action="Index">
+                                            Gestionar Productos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+                        <li class="nav-item ms-3">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var usuarioActual = await UserManager.GetUserAsync(User);
+
+                                <span class="text-white me-2">
+                                    Hola, <strong>@(usuarioActual?.Nombre ?? usuarioActual?.Email)</strong>
+                                </span>
+
+                                <form asp-area="Identity"
+                                      asp-page="/Account/Logout"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-light">
+                                        Cerrar sesión
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a class="btn btn-light btn-sm me-2"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Login">
+                                    Iniciar sesión
+                                </a>
+
+                                <a class="btn btn-outline-light btn-sm"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Register">
+                                    Crear cuenta
+                                </a>
+                            }
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTENIDO -->
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-5 pt-5 pb-4 text-white"
+            style="background: linear-gradient(90deg,#6B4226,#8B4513);">
+
+        <div class="container text-center">
+
+            <h4 class="fw-bold mb-4">Materaíz</h4>
+
+            <!-- Información -->
+            <div class="mb-4">
+                <p class="mb-1">📍 Iguala, Guerrero</p>
+
+                <p class="mb-1">
+                    <a href="https://wa.me/525520596077?text=Hola,%20me%20interesan%20las%20macetas%20Materaíz"
+                       target="_blank"
+                       class="text-white text-decoration-none">
+                        📱 (55) 2059 6077
+                    </a>
+                </p>
+
+                <p>
+                    <a href="mailto:Coatecomatemateraiz@gmail.com"
+                       class="text-white text-decoration-none">
+                        📧 Coatecomatemateraiz@gmail.com
+                    </a>
+                </p>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Síguenos en redes sociales</h5>
+
+                <a href="https://www.instagram.com/materaiz123?igsh=Z2hsNWhja3drYTJh"
+                   target="_blank"
+                   class="btn btn-light me-2 px-4 shadow-sm rounded-pill">
+                    <img src="~/images/instagram.png" width="20" class="me-2">
+                    Instagram
+                </a>
+
+                <a href="https://www.facebook.com/share/17zRvcbnhu/?mibextid=wwXIfr"
+                   target="_blank"
+                   class="btn btn-light px-4 shadow-sm rounded-pill">
+                    <img src="~/images/facebook.png" width="20" class="me-2">
+                    Facebook
+                </a>
+            </div>
+
+            <hr class="bg-light" />
+
+            <p class="mb-1">© 2026 Materaíz - Todos los derechos reservados</p>
+            <small>Ixcateopan 24, Col. Campestre Altamira, Iguala de la Independencia 40080</small>
+
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
