@@ -14,29 +14,34 @@
             <p class="text-muted">Únete a Materaíz 🌿</p>
         </div>
 
-        <form method="post" asp-antiforgery="true">
+        @* Se añade asp-route-returnUrl para evitar errores de redirección en el proxy *@
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
                 <label asp-for="Input.Nombre" class="form-label"></label>
-                <input asp-for="Input.Nombre" class="form-control" />
+                <input asp-for="Input.Nombre" class="form-control" placeholder="Tu nombre" />
+                <span asp-validation-for="Input.Nombre" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Input.Email" class="form-label"></label>
-                <input asp-for="Input.Email" class="form-control" />
+                <input asp-for="Input.Email" class="form-control" placeholder="correo@ejemplo.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3 position-relative">
                 <label asp-for="Input.Password" class="form-label"></label>
-                <input asp-for="Input.Password" class="form-control" id="registerPassword" />
+                <input asp-for="Input.Password" type="password" class="form-control" id="registerPassword" />
                 <span onclick="toggleRegisterPassword()" style="position:absolute; right:15px; top:38px; cursor:pointer;">👁</span>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
             <div class="mb-3 position-relative">
                 <label asp-for="Input.ConfirmPassword" class="form-label"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" id="confirmPassword" />
+                <input asp-for="Input.ConfirmPassword" type="password" class="form-control" id="confirmPassword" />
                 <span onclick="toggleConfirmPassword()" style="position:absolute; right:15px; top:38px; cursor:pointer;">👁</span>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn w-100 text-white" style="background-color:#556B2F;">
