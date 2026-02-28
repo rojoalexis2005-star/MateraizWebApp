@@ -23,6 +23,7 @@ namespace MateraizWebApp.Services
             message.To.Add(new MailboxAddress("", email));
             message.Subject = subject;
 
+            // Plantilla profesional de Materaíz
             string plantilla = $@"
             <div style='background-color:#f4f6f8; padding:40px 0; font-family:Arial, sans-serif;'>
                 <div style='max-width:600px; margin:auto; background:white; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.08); overflow:hidden;'>
@@ -45,12 +46,23 @@ namespace MateraizWebApp.Services
 
             using (var client = new SmtpClient())
             {
-                // Esta línea evita el error de Socket en Render
-                await client.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+                try
+                {
+                    // Conexión usando el puerto 465 (SslOnConnect)
+                    await client.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.SslOnConnect);
 
-                await client.AuthenticateAsync(_settings.Email, _settings.Password);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+                    await client.AuthenticateAsync(_settings.Email, _settings.Password);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                }
+                catch (Exception ex)
+                {
+                    // Esto imprimirá el error real en los Logs de Render si el envío falla
+                    Console.WriteLine("***********************************");
+                    Console.WriteLine("ERROR ENVIANDO CORREO: " + ex.Message);
+                    Console.WriteLine("***********************************");
+                    throw; // Re-lanzamos para que Identity sepa que hubo un problema
+                }
             }
         }
     }
