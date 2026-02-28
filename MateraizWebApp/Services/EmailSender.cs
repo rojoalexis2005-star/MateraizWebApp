@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mail;
 using MateraizWebApp.Models;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace MateraizWebApp.Services
 {
@@ -17,53 +18,40 @@ namespace MateraizWebApp.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(_settings.Host, _settings.Port)
-            {
-                Credentials = new NetworkCredential(_settings.Email, _settings.Password),
-                EnableSsl = true
-            };
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Materaíz 🌿", _settings.Email));
+            message.To.Add(new MailboxAddress("", email));
+            message.Subject = subject;
 
-            // 🎨 PLANTILLA PROFESIONAL HTML
             string plantilla = $@"
-    <div style='background-color:#f4f6f8; padding:40px 0; font-family:Arial, sans-serif;'>
-        <div style='max-width:600px; margin:auto; background:white; border-radius:15px; 
-                    box-shadow:0 5px 20px rgba(0,0,0,0.08); overflow:hidden;'>
+            <div style='background-color:#f4f6f8; padding:40px 0; font-family:Arial, sans-serif;'>
+                <div style='max-width:600px; margin:auto; background:white; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.08); overflow:hidden;'>
+                    <div style='background:#556B2F; padding:25px; text-align:center;'>
+                        <h1 style='color:white; margin:0; font-size:24px;'>🌿 Materaíz</h1>
+                        <p style='color:#e6f0d4; margin:5px 0 0 0; font-size:14px;'>Macetas Artesanales</p>
+                    </div>
+                    <div style='padding:35px 30px; color:#333; font-size:16px; line-height:1.6;'>
+                        {htmlMessage}
+                    </div>
+                    <div style='background:#f9f9f9; padding:20px; text-align:center; font-size:12px; color:#777;'>
+                        © 2026 Materaíz 🌿 <br/>
+                        Este correo fue enviado automáticamente, por favor no respondas.
+                    </div>
+                </div>
+            </div>";
 
-            <!-- HEADER -->
-            <div style='background:#556B2F; padding:25px; text-align:center;'>
-                <h1 style='color:white; margin:0; font-size:24px;'>
-                    🌿 Materaíz
-                </h1>
-                <p style='color:#e6f0d4; margin:5px 0 0 0; font-size:14px;'>
-                    Macetas Artesanales
-                </p>
-            </div>
+            var bodyBuilder = new BodyBuilder { HtmlBody = plantilla };
+            message.Body = bodyBuilder.ToMessageBody();
 
-            <!-- BODY -->
-            <div style='padding:35px 30px; color:#333; font-size:16px; line-height:1.6;'>
-                {htmlMessage}
-            </div>
-
-            <!-- FOOTER -->
-            <div style='background:#f9f9f9; padding:20px; text-align:center; font-size:12px; color:#777;'>
-                © 2026 Materaíz 🌿 <br/>
-                Este correo fue enviado automáticamente, por favor no respondas a este mensaje.
-            </div>
-
-        </div>
-    </div>";
-
-            var mail = new MailMessage
+            using (var client = new SmtpClient())
             {
-                From = new MailAddress(_settings.Email, "Materaíz 🌿"),
-                Subject = subject,
-                Body = plantilla,
-                IsBodyHtml = true
-            };
+                // Esta línea evita el error de Socket en Render
+                await client.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
 
-            mail.To.Add(email);
-
-            await client.SendMailAsync(mail);
+                await client.AuthenticateAsync(_settings.Email, _settings.Password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
         }
     }
 }
