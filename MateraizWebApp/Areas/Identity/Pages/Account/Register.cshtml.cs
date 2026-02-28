@@ -15,15 +15,18 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -76,9 +79,14 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    // 🔥 ASIGNAR ROL CLIENTE AUTOMÁTICAMENTE
+                    // 🔥 Asegurar que el rol Cliente existe
+                    if (!await _roleManager.RoleExistsAsync("Cliente"))
+                        await _roleManager.CreateAsync(new IdentityRole("Cliente"));
+
+                    // 🔥 Asignar rol Cliente automáticamente
                     await _userManager.AddToRoleAsync(user, "Cliente");
 
+                    // Generar token de confirmación
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
@@ -88,25 +96,21 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
                         new { area = "Identity", userId = user.Id, code = code },
                         Request.Scheme);
 
-                    // 🎨 CORREO BONITO
+                    // 🎨 Correo bonito
                     var mensaje = $@"
-                <h2 style='color:#556B2F;'>¡Bienvenido a Materaíz! 🌿</h2>
-
-                <p>Hola <strong>{Input.Nombre}</strong>, gracias por registrarte.</p>
-
-                <p>Para activar tu cuenta haz clic en el botón:</p>
-
-                <div style='text-align:center; margin:30px 0;'>
-                    <a href='{callbackUrl}'
-                       style='background:#556B2F; color:white; padding:12px 25px;
-                              text-decoration:none; border-radius:8px; font-weight:bold;'>
-                        Confirmar mi cuenta
-                    </a>
-                </div>
-
-                <p style='font-size:14px; color:#777;'>
-                    Si tú no realizaste este registro puedes ignorar este correo.
-                </p>";
+                        <h2 style='color:#556B2F;'>¡Bienvenido a Materaíz! 🌿</h2>
+                        <p>Hola <strong>{Input.Nombre}</strong>, gracias por registrarte.</p>
+                        <p>Para activar tu cuenta haz clic en el botón:</p>
+                        <div style='text-align:center; margin:30px 0;'>
+                            <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
+                               style='background:#556B2F; color:white; padding:12px 25px;
+                                      text-decoration:none; border-radius:8px; font-weight:bold;'>
+                                Confirmar mi cuenta
+                            </a>
+                        </div>
+                        <p style='font-size:14px; color:#777;'>
+                            Si tú no realizaste este registro puedes ignorar este correo.
+                        </p>";
 
                     await _emailSender.SendEmailAsync(
                         Input.Email,
