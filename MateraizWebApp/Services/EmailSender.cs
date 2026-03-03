@@ -30,15 +30,17 @@ namespace MateraizWebApp.Services
             {
                 try
                 {
-                    // Conexión segura estándar para SendGrid
-                    await client.ConnectAsync("smtp.sendgrid.net", 587, SecureSocketOptions.StartTls);
+                    // Aumentamos el tiempo de espera a 60 segundos
+                    client.Timeout = 60000;
 
-                    // Autenticación: El usuario siempre es "apikey" y el password es tu código SG
+                    // Probamos con StartTls (Puerto 587 o 2525)
+                    await client.ConnectAsync("smtp.sendgrid.net", _settings.Port, SecureSocketOptions.StartTls);
+
                     await client.AuthenticateAsync("apikey", _settings.Password);
-
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
-                    Console.WriteLine("✅ Correo enviado con éxito a través de SendGrid");
+
+                    Console.WriteLine("✅ ¡Enviado exitosamente!");
                 }
                 catch (Exception ex)
                 {
