@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using MateraizWebApp.Models;   // 👈 IMPORTANTE
+using MateraizWebApp.Models;
 
 namespace MateraizWebApp.Areas.Identity.Pages.Account
 {
@@ -48,7 +48,9 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
 
             Email = email;
 
-            DisplayConfirmAccountLink = true;
+            // 🔥 CAMBIO AQUÍ: Cambia true por false 🔥
+            // Esto quita el mensaje "Esta aplicación no tiene configurado un servicio real"
+            DisplayConfirmAccountLink = false;
 
             if (DisplayConfirmAccountLink)
             {

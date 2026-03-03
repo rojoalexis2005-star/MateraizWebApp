@@ -17,10 +17,10 @@ namespace MateraizWebApp.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            // Usamos la API Key configurada en Render (EmailSettings__Password)
+            // Usa la API Key (SG...) configurada en las variables de Render
             var client = new SendGridClient(_settings.Password);
 
-            // DEBE ser exactamente el verificado en tu imagen de SendGrid
+            // Remitente verificado en tu panel de SendGrid
             var from = new EmailAddress("5723110143@utrng.edu.mx", "Materaíz 🌿");
             var to = new EmailAddress(email);
 
@@ -29,21 +29,19 @@ namespace MateraizWebApp.Services
             try
             {
                 var response = await client.SendEmailAsync(msg);
-
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("✅ ¡ÉXITO! Correo enviado vía API.");
+                    Console.WriteLine("✅ Correo enviado exitosamente vía API");
                 }
                 else
                 {
-                    // Esto nos dirá en los logs de Render el motivo exacto si falla
-                    var errorBody = await response.Body.ReadAsStringAsync();
-                    Console.WriteLine($"❌ Error API SendGrid: {response.StatusCode} - {errorBody}");
+                    var error = await response.Body.ReadAsStringAsync();
+                    Console.WriteLine($"❌ Error SendGrid: {response.StatusCode} - {error}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error crítico: {ex.Message}");
+                Console.WriteLine($"❌ Error crítico en EmailSender: {ex.Message}");
             }
         }
     }

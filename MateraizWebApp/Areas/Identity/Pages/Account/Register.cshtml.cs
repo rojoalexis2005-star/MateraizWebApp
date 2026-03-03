@@ -79,43 +79,55 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    // 🔥 Asegurar que el rol Cliente existe
+                    // 🌿 Asegurar que el rol Cliente existe
                     if (!await _roleManager.RoleExistsAsync("Cliente"))
                         await _roleManager.CreateAsync(new IdentityRole("Cliente"));
 
-                    // 🔥 Asignar rol Cliente automáticamente
+                    // 🌿 Asignar rol Cliente automáticamente
                     await _userManager.AddToRoleAsync(user, "Cliente");
 
                     // Generar token de confirmación
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
+                    // 🛠️ MEJORA: Forzamos el protocolo HTTPS para que el link funcione siempre en Render
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
-                        null,
-                        new { area = "Identity", userId = user.Id, code = code },
-                        Request.Scheme);
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = user.Id, code = code },
+                        protocol: "https");
 
-                    // 🎨 Correo bonito
+                    // 🎨 Diseño del correo para Materaíz
                     var mensaje = $@"
-                        <h2 style='color:#556B2F;'>¡Bienvenido a Materaíz! 🌿</h2>
-                        <p>Hola <strong>{Input.Nombre}</strong>, gracias por registrarte.</p>
-                        <p>Para activar tu cuenta haz clic en el botón:</p>
-                        <div style='text-align:center; margin:30px 0;'>
-                            <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
-                               style='background:#556B2F; color:white; padding:12px 25px;
-                                      text-decoration:none; border-radius:8px; font-weight:bold;'>
-                                Confirmar mi cuenta
-                            </a>
-                        </div>
-                        <p style='font-size:14px; color:#777;'>
-                            Si tú no realizaste este registro puedes ignorar este correo.
-                        </p>";
+                        <div style='font-family: Arial, sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
+                            <h2 style='color:#556B2F;'>¡Bienvenido a Materaíz! 🌿</h2>
+                            <p>Hola <strong>{Input.Nombre}</strong>, gracias por registrarte en nuestra tienda.</p>
+                            <p>Para activar tu cuenta y comenzar a comprar nuestras macetas artesanales, haz clic en el botón:</p>
+                            <div style='text-align:center; margin:30px 0;'>
+                                <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
+                                   style='background:#556B2F; color:white; padding:15px 30px;
+                                          text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block;'>
+                                    Confirmar mi cuenta
+                                </a>
+                            </div>
+                            <p style='font-size:12px; color:#777;'>
+                                Si tú no realizaste este registro, puedes ignorar este correo de forma segura.
+                            </p>
+                        </div>";
 
-                    await _emailSender.SendEmailAsync(
-                        Input.Email,
-                        "Confirmar tu cuenta - Materaíz 🌿",
-                        mensaje);
+                    // 🛠️ MEJORA: Envolvemos en Try-Catch para que el registro sea instantáneo
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(
+                            Input.Email,
+                            "Confirmar tu cuenta - Materaíz 🌿",
+                            mensaje);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Registramos el error en la consola de Render pero permitimos que el usuario termine su flujo
+                        Console.WriteLine($"❌ Error de envío de correo: {ex.Message}");
+                    }
 
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                 }
@@ -124,6 +136,7 @@ namespace MateraizWebApp.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
             }
 
+            // Si llegamos aquí, algo falló, volvemos a mostrar el formulario
             return Page();
         }
     }
