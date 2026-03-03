@@ -30,20 +30,19 @@ namespace MateraizWebApp.Services
             {
                 try
                 {
-                    // SendGrid funciona mejor con StartTls en el puerto 587
+                    // Conexión segura estándar para SendGrid
                     await client.ConnectAsync("smtp.sendgrid.net", 587, SecureSocketOptions.StartTls);
 
-                    // IMPORTANTE: El usuario siempre es la palabra "apikey"
+                    // Autenticación: El usuario siempre es "apikey" y el password es tu código SG
                     await client.AuthenticateAsync("apikey", _settings.Password);
 
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
+                    Console.WriteLine("✅ Correo enviado con éxito a través de SendGrid");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("***********************************");
-                    Console.WriteLine("ERROR SENDGRID: " + ex.Message);
-                    Console.WriteLine("***********************************");
+                    Console.WriteLine("❌ Error crítico en EmailSender: " + ex.Message);
                 }
             }
         }
