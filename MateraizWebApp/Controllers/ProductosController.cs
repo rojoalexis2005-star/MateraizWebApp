@@ -3,16 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MateraizWebApp.Data;
 using MateraizWebApp.Models;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Options;
 
 namespace MateraizWebApp.Controllers
 {
     public class ProductosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly Cloudinary _cloudinary;
 
-        public ProductosController(ApplicationDbContext context)
+        // Inyectamos el contexto y la configuración de Cloudinary
+        public ProductosController(ApplicationDbContext context, IOptions<CloudinarySettings> config)
         {
             _context = context;
+            // Autenticación con Cloudinary usando tus credenciales de Render
+            var acc = new Account(
+                config.Value.CloudName,
+                config.Value.ApiKey,
+                config.Value.ApiSecret
+            );
+            _cloudinary = new Cloudinary(acc);
         }
 
         // ================================
@@ -28,14 +40,12 @@ namespace MateraizWebApp.Controllers
         // ================================
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var producto = await _context.Productos
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (producto == null)
-                return NotFound();
+            if (producto == null) return NotFound();
 
             return View(producto);
         }
@@ -49,7 +59,6 @@ namespace MateraizWebApp.Controllers
             return View();
         }
 
-        // POST: CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -57,32 +66,31 @@ namespace MateraizWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (producto.ImagenArchivo != null)
+                // 🔥 NUEVA LÓGICA: Subida a Cloudinary
+                if (producto.ImagenArchivo != null && producto.ImagenArchivo.Length > 0)
                 {
-                    string carpeta = Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwroot/images/productos");
-
-                    if (!Directory.Exists(carpeta))
-                        Directory.CreateDirectory(carpeta);
-
-                    string nombreArchivo = Guid.NewGuid().ToString() +
-                                           Path.GetExtension(producto.ImagenArchivo.FileName);
-
-                    string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
-
-                    using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                    try
                     {
-                        await producto.ImagenArchivo.CopyToAsync(stream);
-                    }
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(producto.ImagenArchivo.FileName, producto.ImagenArchivo.OpenReadStream()),
+                            Folder = "materaiz_productos",
+                            Transformation = new Transformation().Quality("auto").FetchFormat("auto")
+                        };
 
-                    producto.ImagenUrl = "/images/productos/" + nombreArchivo;
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        producto.ImagenUrl = uploadResult.SecureUrl.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"❌ Error Cloudinary: {ex.Message}");
+                    }
                 }
 
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
             return View(producto);
         }
 
@@ -92,75 +100,53 @@ namespace MateraizWebApp.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
-
+            if (id == null) return NotFound();
             var producto = await _context.Productos.FindAsync(id);
-
-            if (producto == null)
-                return NotFound();
-
+            if (producto == null) return NotFound();
             return View(producto);
         }
 
-        // POST: EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Producto producto)
         {
-            if (id != producto.Id)
-                return NotFound();
+            if (id != producto.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var productoDb = await _context.Productos.FindAsync(id);
+                    var productoDb = await _context.Productos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+                    if (productoDb == null) return NotFound();
 
-                    if (productoDb == null)
-                        return NotFound();
-
-                    productoDb.Nombre = producto.Nombre;
-                    productoDb.Descripcion = producto.Descripcion;
-                    productoDb.Precio = producto.Precio;
-                    productoDb.Tamaño = producto.Tamaño;
-
-                    if (producto.ImagenArchivo != null)
+                    // 🔥 NUEVA LÓGICA: Actualizar imagen en Cloudinary si se sube una nueva
+                    if (producto.ImagenArchivo != null && producto.ImagenArchivo.Length > 0)
                     {
-                        string carpeta = Path.Combine(Directory.GetCurrentDirectory(),
-                            "wwwroot/images/productos");
-
-                        if (!Directory.Exists(carpeta))
-                            Directory.CreateDirectory(carpeta);
-
-                        string nombreArchivo = Guid.NewGuid().ToString() +
-                                               Path.GetExtension(producto.ImagenArchivo.FileName);
-
-                        string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
-
-                        using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                        var uploadParams = new ImageUploadParams()
                         {
-                            await producto.ImagenArchivo.CopyToAsync(stream);
-                        }
-
-                        productoDb.ImagenUrl = "/images/productos/" + nombreArchivo;
+                            File = new FileDescription(producto.ImagenArchivo.FileName, producto.ImagenArchivo.OpenReadStream()),
+                            Folder = "materaiz_productos"
+                        };
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        producto.ImagenUrl = uploadResult.SecureUrl.ToString();
+                    }
+                    else
+                    {
+                        // Mantener la URL anterior si no se subió una nueva
+                        producto.ImagenUrl = productoDb.ImagenUrl;
                     }
 
-                    _context.Update(productoDb);
+                    _context.Update(producto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductoExists(producto.Id))
-                        return NotFound();
-                    else
-                        throw;
+                    if (!ProductoExists(producto.Id)) return NotFound();
+                    else throw;
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
             return View(producto);
         }
 
@@ -170,28 +156,21 @@ namespace MateraizWebApp.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
-
-            var producto = await _context.Productos
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (producto == null)
-                return NotFound();
-
+            if (id == null) return NotFound();
+            var producto = await _context.Productos.FirstOrDefaultAsync(m => m.Id == id);
+            if (producto == null) return NotFound();
             return View(producto);
         }
 
-        // POST: DELETE
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var producto = await _context.Productos.FindAsync(id);
-
             if (producto != null)
             {
+                // Opcional: Podrías eliminar la imagen de Cloudinary aquí usando el PublicId
                 _context.Productos.Remove(producto);
             }
 

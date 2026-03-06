@@ -4,14 +4,13 @@ using MateraizWebApp.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.HttpOverrides; // 👈 Necesario para Render
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ================================
 // CONFIGURACIÓN DE PROXY (RENDER)
 // ================================
-// Esto ayuda a que la app entienda que está bajo HTTPS aunque Render use un proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -45,8 +44,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // 👈 Fuerza cookies seguras
-    options.Cookie.SameSite = SameSiteMode.None; // 👈 Evita problemas de redirección
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.None;
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
@@ -58,12 +57,18 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
+// ================================
+// CLOUDINARY (NUEVA SECCIÓN)
+// ================================
+// Esto vincula las variables de Render con tu clase CloudinarySettings
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// 👈 Activar los encabezados de proxy inmediatamente después del build
 app.UseForwardedHeaders();
 
 // ================================

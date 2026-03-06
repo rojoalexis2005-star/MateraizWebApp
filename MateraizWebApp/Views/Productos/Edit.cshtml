@@ -5,52 +5,75 @@
 }
 
 <div class="container my-5">
-    <div class="card shadow p-4">
-        <h3 class="text-center mb-4">✏ Editar Producto</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border-0 p-4" style="border-radius: 15px;">
+                <h3 class="text-center mb-4" style="color: #8B8000;">✏️ Editar Producto</h3>
 
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ImagenArchivo" />
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    @* Mantenemos la URL actual oculta por si no se cambia la imagen *@
+                    <input type="hidden" asp-for="ImagenUrl" />
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label fw-bold"></label>
-                <input asp-for="Nombre" class="form-control" />
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold"></label>
+                        <input asp-for="Nombre" class="form-control rounded-pill" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3" style="border-radius: 10px;"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Precio" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Precio" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Precio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Tamaño" class="form-label fw-bold"></label>
+                            <input asp-for="Tamaño" class="form-control" />
+                            <span asp-validation-for="Tamaño" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Imagen Actual / Nueva</label>
+                        <input asp-for="ImagenArchivo" type="file" class="form-control" accept="image/*" onchange="previewImage(this)" />
+
+                        <div class="text-center mt-3">
+                            @if (!String.IsNullOrEmpty(Model.ImagenUrl))
+                            {
+                                @* Mostramos la imagen actual guardada en la nube *@
+                                <img id="imgPreview" src="@Model.ImagenUrl" width="200" class="rounded shadow border" style="border-radius: 12px;" />
+                            }
+                            else
+                            {
+                                <img id="imgPreview" src="#" width="200" class="rounded shadow border" style="display: none; border-radius: 12px;" />
+                            }
+                            <p class="text-muted small mt-2">Vista previa de la imagen</p>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-warning btn-lg px-5 rounded-pill shadow-sm text-white">
+                            Guardar Cambios
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="Descripcion" class="form-label fw-bold"></label>
-                <textarea asp-for="Descripcion" class="form-control"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Precio" class="form-label fw-bold"></label>
-                <input asp-for="Precio" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold">Cambiar Imagen</label>
-                <input asp-for="ImagenArchivo" type="file" class="form-control" />
-            </div>
-
-            @if (!String.IsNullOrEmpty(Model.ImagenUrl))
-            {
-                <div class="text-center mb-3">
-                    <img src="@Model.ImagenArchivo" width="150" class="rounded shadow" />
-                </div>
-            }
-
-            <div class="mb-3">
-                <label asp-for="Tamaño" class="form-label fw-bold"></label>
-                <input asp-for="Tamaño" class="form-control" />
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-warning px-4">Guardar Cambios</button>
-                <a asp-action="Index" class="btn btn-secondary px-4">Cancelar</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -58,4 +81,18 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('imgPreview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 }

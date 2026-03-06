@@ -5,43 +5,66 @@
 }
 
 <div class="container my-5">
-    <div class="card shadow p-4">
-        <h3 class="text-center mb-4">🌿 Agregar Nuevo Producto</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border-0 p-4" style="border-radius: 15px;">
+                <h3 class="text-center mb-4" style="color: #556B2F;">🌿 Agregar Nuevo Producto</h3>
 
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @* Es vital mantener el enctype para que Cloudinary reciba el archivo *@
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label fw-bold"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold"></label>
+                        <input asp-for="Nombre" class="form-control rounded-pill" placeholder="Ej. Maceta de Barro Minimalista" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3" style="border-radius: 10px;" placeholder="Describe las características del producto..."></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Precio" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Precio" class="form-control" placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="Precio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Tamaño" class="form-label fw-bold"></label>
+                            <input asp-for="Tamaño" class="form-control" placeholder="Ej. 15cm x 15cm" />
+                            <span asp-validation-for="Tamaño" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Imagen del Producto</label>
+                        @* El nombre del input 'ImagenArchivo' debe coincidir con tu Modelo *@
+                        <input asp-for="ImagenArchivo" type="file" class="form-control" accept="image/*" onchange="previewImage(this)" />
+                        <div class="form-text">La imagen se optimizará automáticamente en la nube.</div>
+
+                        @* Contenedor de vista previa *@
+                        <div class="mt-3 text-center">
+                            <img id="imgPreview" src="#" alt="Vista previa" style="max-height: 250px; display: none; border-radius: 12px; border: 2px solid #556B2F;" />
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
+                            <i class="bi bi-save"></i> Guardar Producto
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="Descripcion" class="form-label fw-bold"></label>
-                <textarea asp-for="Descripcion" class="form-control"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Precio" class="form-label fw-bold"></label>
-                <input asp-for="Precio" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-bold">Imagen del Producto</label>
-                <input asp-for="ImagenArchivo" type="file" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Tamaño" class="form-label fw-bold"></label>
-                <input asp-for="Tamaño" class="form-control" />
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-success px-4">Guardar</button>
-                <a asp-action="Index" class="btn btn-secondary px-4">Cancelar</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -49,4 +72,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    @* Script para la previsualización de la imagen antes de subirla *@
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('imgPreview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
 }
