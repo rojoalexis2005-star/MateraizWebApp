@@ -5,10 +5,13 @@
 }
 
 <style>
-    /* Efecto para ocultar/mostrar detalles al tocar la imagen */
     .producto-card {
         cursor: pointer;
         transition: transform 0.3s ease;
+        max-width: 260px;
+        margin: auto;
+        border-radius: 15px;
+        overflow: hidden;
     }
 
         .producto-card:hover {
@@ -16,7 +19,7 @@
         }
 
     .detalles-producto {
-        display: none; /* Oculto por defecto */
+        display: none;
         animation: fadeIn 0.5s;
     }
 
@@ -29,50 +32,65 @@
             opacity: 1;
         }
     }
+
+    .card-body {
+        padding: 10px;
+    }
+
+        .card-body h5 {
+            font-size: 1rem;
+        }
+
+        .card-body p {
+            font-size: 0.85rem;
+        }
 </style>
 
 <div class="container my-5">
     <h2 class="text-center mb-5 fw-bold" style="color:#556B2F;">🌿 Galería de Productos</h2>
 
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach (var item in Model)
         {
             var mensaje = $"Hola, me interesa el producto: {item.Nombre} - Precio: ${item.Precio}";
             var mensajeCodificado = Uri.EscapeDataString(mensaje);
             var cardId = "details-" + item.Id;
 
-            <div class="col-md-4 mb-4">
+            <div class="col-md-3 mb-4">
                 <div class="card shadow h-100 border-0 producto-card" onclick="toggleDetails('@cardId')">
 
                     <div class="position-relative">
                         <img src="@item.ImagenUrl"
                              class="card-img-top"
-                             style="height:350px; object-fit:cover; border-radius: 15px 15px 0 0;" />
+                             style="height:220px; object-fit:cover;" />
+
                         <div class="position-absolute bottom-0 start-0 m-2 badge bg-dark opacity-75">
                             Click para ver detalles
                         </div>
                     </div>
 
                     <div class="card-body text-center">
-                        <h5 class="fw-bold mb-3">@item.Nombre</h5>
+                        <h5 class="fw-bold mb-2">@item.Nombre</h5>
 
                         <div id="@cardId" class="detalles-producto">
-                            <p class="text-muted small">@item.Descripcion</p>
+                            <p class="text-muted">@item.Descripcion</p>
 
-                            <p class="fw-bold text-success fs-5 mb-1">$@item.Precio</p>
+                            <p class="fw-bold text-success mb-1">$@item.Precio</p>
 
-                            <p class="mb-3 text-secondary">
+                            <p class="mb-2 text-secondary">
                                 <strong>Tamaño:</strong> @item.Tamaño
                             </p>
 
-                            <div class="card-footer bg-white border-0 pb-3">
+                            <div class="card-footer bg-white border-0 pb-2">
                                 <button onclick="confirmarWhatsapp(event, '@mensajeCodificado')"
-                                        class="btn btn-success rounded-pill px-4 shadow-sm fw-bold">
-                                    📱 Ordenar ahora
+                                        class="btn btn-success rounded-pill px-3 py-1 shadow-sm fw-bold"
+                                        style="font-size: 0.85rem;">
+                                    📱 Ordenar
                                 </button>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         }
@@ -82,7 +100,6 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Función para mostrar/ocultar detalles
         function toggleDetails(id) {
             var x = document.getElementById(id);
             if (x.style.display === "none" || x.style.display === "") {
@@ -92,9 +109,8 @@
             }
         }
 
-        // Función de confirmación para WhatsApp
         function confirmarWhatsapp(event, mensaje) {
-            event.stopPropagation(); // Evita que al hacer clic en el botón se cierre el detalle
+            event.stopPropagation();
 
             Swal.fire({
                 title: '¿Ir a WhatsApp?',
@@ -104,8 +120,7 @@
                 confirmButtonColor: '#556B2F',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Sí, ir ahora',
-                cancelButtonText: 'No, cancelar',
-                borderRadis: '20px'
+                cancelButtonText: 'No, cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.open('https://wa.me/525520596077?text=' + mensaje, '_blank');
