@@ -50,50 +50,62 @@
     <h2 class="text-center mb-5 fw-bold" style="color:#556B2F;">🌿 Galería de Productos</h2>
 
     <div class="row justify-content-center">
-        @foreach (var item in Model)
+
+        @* 🔥 VALIDACIÓN IMPORTANTE *@
+        @if (Model != null && Model.Any())
         {
-            var mensaje = $"Hola, me interesa el producto: {item.Nombre} - Precio: ${item.Precio}";
-            var mensajeCodificado = Uri.EscapeDataString(mensaje);
-            var cardId = "details-" + item.Id;
+            foreach (var item in Model)
+            {
+                var mensaje = $"Hola, me interesa el producto: {item.Nombre} - Precio: ${item.Precio}";
+                var mensajeCodificado = Uri.EscapeDataString(mensaje);
+                var cardId = "details-" + item.Id;
 
-            <div class="col-md-3 mb-4">
-                <div class="card shadow h-100 border-0 producto-card" onclick="toggleDetails('@cardId')">
+                <div class="col-md-3 mb-4">
+                    <div class="card shadow h-100 border-0 producto-card" onclick="toggleDetails('@cardId')">
 
-                    <div class="position-relative">
-                        <img src="@item.ImagenUrl"
-                             class="card-img-top"
-                             style="height:220px; object-fit:cover;" />
+                        <div class="position-relative">
+                            <img src="@item.ImagenUrl"
+                                 class="card-img-top"
+                                 style="height:220px; object-fit:cover;" />
 
-                        <div class="position-absolute bottom-0 start-0 m-2 badge bg-dark opacity-75">
-                            Click para ver detalles
-                        </div>
-                    </div>
-
-                    <div class="card-body text-center">
-                        <h5 class="fw-bold mb-2">@item.Nombre</h5>
-
-                        <div id="@cardId" class="detalles-producto">
-                            <p class="text-muted">@item.Descripcion</p>
-
-                            <p class="fw-bold text-success mb-1">$@item.Precio</p>
-
-                            <p class="mb-2 text-secondary">
-                                <strong>Tamaño:</strong> @item.Tamaño
-                            </p>
-
-                            <div class="card-footer bg-white border-0 pb-2">
-                                <button onclick="confirmarWhatsapp(event, '@mensajeCodificado')"
-                                        class="btn btn-success rounded-pill px-3 py-1 shadow-sm fw-bold"
-                                        style="font-size: 0.85rem;">
-                                    📱 Ordenar
-                                </button>
+                            <div class="position-absolute bottom-0 start-0 m-2 badge bg-dark opacity-75">
+                                Click para ver detalles
                             </div>
                         </div>
-                    </div>
 
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold mb-2">@item.Nombre</h5>
+
+                            <div id="@cardId" class="detalles-producto">
+                                <p class="text-muted">@item.Descripcion</p>
+
+                                <p class="fw-bold text-success mb-1">$@item.Precio</p>
+
+                                <p class="mb-2 text-secondary">
+                                    <strong>Tamaño:</strong> @item.Tamaño
+                                </p>
+
+                                <div class="card-footer bg-white border-0 pb-2">
+                                    <button onclick="confirmarWhatsapp(event, '@mensajeCodificado')"
+                                            class="btn btn-success rounded-pill px-3 py-1 shadow-sm fw-bold"
+                                            style="font-size: 0.85rem;">
+                                        📱 Ordenar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="text-center">
+                <p class="text-muted fs-5">No hay productos disponibles 😢</p>
             </div>
         }
+
     </div>
 </div>
 

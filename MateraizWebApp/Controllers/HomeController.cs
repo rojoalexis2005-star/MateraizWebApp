@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MateraizWebApp.Data;
+using MateraizWebApp.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MateraizWebApp.Controllers
 {
@@ -15,6 +18,9 @@ namespace MateraizWebApp.Controllers
             _context = context;
         }
 
+        // ===============================
+        // INICIO
+        // ===============================
         public IActionResult Index()
         {
             return View();
@@ -30,19 +36,35 @@ namespace MateraizWebApp.Controllers
             return View();
         }
 
-        // ?? GALERÍA DINÁMICA
-        public async Task<IActionResult> Galeria()
-        {
-            var productosConImagen = await _context.Productos
-                .Where(p => !string.IsNullOrEmpty(p.ImagenUrl))
-                .ToListAsync();
-
-            return View(productosConImagen);
-        }
-
         public IActionResult Contacto()
         {
             return View();
+        }
+
+        // ===============================
+        // GALERÍA (CORREGIDA)
+        // ===============================
+        public async Task<IActionResult> Galeria()
+        {
+            try
+            {
+                var productosConImagen = await _context.Productos
+                    .Where(p => !string.IsNullOrEmpty(p.ImagenUrl))
+                    .ToListAsync();
+
+                // Evita null en la vista
+                if (productosConImagen == null)
+                {
+                    productosConImagen = new List<Producto>();
+                }
+
+                return View(productosConImagen);
+            }
+            catch (Exception ex)
+            {
+                // ?? Mostrar error real (solo para debug)
+                return Content("ERROR EN GALERÍA:\n\n" + ex.ToString());
+            }
         }
     }
 }
