@@ -22,9 +22,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 // BASE DE DATOS
 // ================================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-   options.UseNpgsql(
-    builder.Configuration.GetConnectionString("DefaultConnection")));
-
+  options.UseNpgsql(
+    builder.Configuration.GetConnectionString("DefaultConnection"),
+    o => o.EnableRetryOnFailure())); 
 // ================================
 // IDENTITY + ROLES
 // ================================
